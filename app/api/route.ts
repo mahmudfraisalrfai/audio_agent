@@ -1,9 +1,10 @@
 import { google } from "@ai-sdk/google";
 import { generateText } from "ai";
+import { NextRequest, NextResponse } from "next/server";
 import postgres from "postgres";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
-export async function POST(req: Response) {
+export async function POST(req: NextRequest) {
   const { type, amount, role, techstack } = await req.json();
   const { text: questins } = await generateText({
     model: google("gemini-1.5-flash"),
@@ -33,7 +34,7 @@ thank you ! <3`,
           ${new Date()}
         )`;
 
-  return Response.json({ success: true }, { status: 200 });
+  return NextResponse.json({ success: true }, { status: 200 });
 }
 // export async function GET(req: Response) {
 //   const data = await sql`select * from interview`;

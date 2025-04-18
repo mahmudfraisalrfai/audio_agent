@@ -35,12 +35,12 @@ thank you ! <3`,
 
   return Response.json({ success: true }, { status: 200 });
 }
-export async function GET(req: Response) {
-  const data = await sql`select * from interview`;
-  console.log(req);
+// export async function GET(req: Response) {
+//   const data = await sql`select * from interview`;
+//   console.log(req);
 
-  return Response.json(data);
-}
+//   return Response.json(data);
+// }
 // export async function POST(req: Response) {
 //   const ai = new GoogleGenAI({
 //     apiKey: "AIzaSyBnMOFAkU7WdXUiuTn-exQf7A_OEQtbeL4",

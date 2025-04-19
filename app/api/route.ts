@@ -1,50 +1,105 @@
-import { google } from "@ai-sdk/google";
-import { generateText } from "ai";
 import { NextRequest, NextResponse } from "next/server";
 import postgres from "postgres";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
 export async function POST(req: NextRequest) {
-  const { type, amount, role, techstack } = await req.json();
-  const { text: questins } = await generateText({
-    model: google("gemini-1.5-flash"),
-    prompt: `prepar questions for a job interview . 
-the job role is ${role}.
-the job experience level is senior .
-the tech stack use in the job is ${techstack} .
-the focuce between behavioural and technical questions should lean towards :${type}.
-the amount of questions ${amount}.
-please return only the questions , without any additional text .
-the questions are going to be in ARBIC and  read by a voice assistant so do not use "/" or "*" or any special characters wich might break the voice assistant 
-return the questins formatted like this :["Question 1","Question 2","Question 3"]
+  try {
+    const apiKey = process.env.API_AI_ML;
+    const { type, amount, role, techstack } = await req.json();
 
-thank you ! <3`,
-  });
+    const result = await fetch("https://api.aimlapi.com/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "gpt-4o",
+        messages: [
+          {
+            content: `prepar questions for a job interview .
+ the job role is ${role}.
+ the job experience level is senior .
+ the tech stack use in the job is ${techstack} .
+ the focuce between behavioural and technical questions should lean towards :${type}.
+ the amount of questions ${amount}.
+ please return only the questions , without any additional text .
+ the questions are going to be in ARBIC and  read by a voice assistant so do not use "/" or "*" or any special characters wich might break the voice assistant
+ return the questins formatted like this :["Question 1","Question 2","Question 3"]
 
-  await sql`
+ thank you ! <3`,
+            role: "user", // <== هذا مهم أيضاً ويبدو أنه ناقص
+          },
+        ],
+        max_tokens: 512,
+        stream: false,
+      }),
+    });
+    const data = await result.json();
+    await sql`
       INSERT INTO interview (
         role, amount, techstack, type, questions, createdAt
-      ) VALUES 
+      ) VALUES
         (
           ${role},
           ${amount},
           ${techstack},
           ${type},
-          ${questins},
+          ${data.choices[0].message.content},
           ${new Date()}
         )`;
 
-  return NextResponse.json({ success: true }, { status: 200 });
+    return NextResponse.json({ success: true }, { status: 200 });
+  } catch (err) {
+    console.error("Error in API Route:", err);
+    return new Response(JSON.stringify({ error: "Internal Server Error" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
 }
-// export async function GET(req: Response) {
-//   const data = await sql`select * from interview`;
-//   console.log(req);
 
-//   return Response.json(data);
+export async function GET(req: NextRequest) {
+  const data = await sql`select * from interview`;
+  console.log(req);
+
+  return NextResponse.json(data);
+}
+// export async function POST(req: Request) {
+//   const { type, amount, role, techstack } = await req.json();
+//   const { text: questins } = await generateText({
+//     model: google("gemini-1.5-flash"),
+//     prompt: `prepar questions for a job interview .
+// the job role is ${role}.
+// the job experience level is senior .
+// the tech stack use in the job is ${techstack} .
+// the focuce between behavioural and technical questions should lean towards :${type}.
+// the amount of questions ${amount}.
+// please return only the questions , without any additional text .
+// the questions are going to be in ARBIC and  read by a voice assistant so do not use "/" or "*" or any special characters wich might break the voice assistant
+// return the questins formatted like this :["Question 1","Question 2","Question 3"]
+
+// thank you ! <3`,
+//   });
+
+//   await sql`
+//       INSERT INTO interview (
+//         role, amount, techstack, type, questions, createdAt
+//       ) VALUES
+//         (
+//           ${role},
+//           ${amount},
+//           ${techstack},
+//           ${type},
+//           ${questins},
+//           ${new Date()}
+//         )`;
+
+//   return Response.json({ success: true }, { status: 200 });
 // }
 // export async function POST(req: Response) {
 //   const ai = new GoogleGenAI({
-//     apiKey: "AIzaSyBnMOFAkU7WdXUiuTn-exQf7A_OEQtbeL4",
+//     apiKey: "AIzaSyDEDBERdbHqGKJoyUmrPQ0BolfKwgCvfFE",
 //   });
 
 //   const response = await ai.models.generateContent({
@@ -61,9 +116,8 @@ thank you ! <3`,
 // fetch api gemin and ai/ml
 // export async function POST(req: Request) {
 //   try {
-
 //     const response = await fetch(
-//       "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyBnMOFAkU7WdXUiuTn-exQf7A_OEQtbeL4",
+//       "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyBskhDoV9Zsqlxj0NMdCtCtZWHVR6RLOnA",
 //       {
 //         method: "POST",
 //         headers: { "Content-Type": "application/json" },
@@ -157,37 +211,5 @@ thank you ! <3`,
 //         headers: { "Content-Type": "application/json" },
 //       }
 //     );
-//   }
-// }
-// export async function POST(req: Request) {
-//   try {
-//     const apiKey = process.env.GOOGLE_API_KEY;
-//     const result = await fetch("https://api.aimlapi.com/chat/completions", {
-//       method: "POST",
-//       headers: {
-//         Authorization: "Bearer 280206cb25e54346b4337a8a05f856d6",
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({
-//         model: "gpt-4o",
-//         messages: [
-//           {
-//             content: "hello",
-//             role: "user", // <== هذا مهم أيضاً ويبدو أنه ناقص
-//           },
-//         ],
-//         max_tokens: 512,
-//         stream: false,
-//       }),
-//     });
-//     const data = await result.json();
-//     console.log(data);
-//     return Response.json(data);
-//   } catch (err) {
-//     console.error("Error in API Route:", err);
-//     return new Response(JSON.stringify({ error: "Internal Server Error" }), {
-//       status: 500,
-//       headers: { "Content-Type": "application/json" },
-//     });
 //   }
 // }

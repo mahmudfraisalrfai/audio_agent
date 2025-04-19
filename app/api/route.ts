@@ -63,8 +63,8 @@ export async function GET() {
   try {
     const data = await sql.unsafe(`SELECT * FROM interview`);
     return NextResponse.json(data);
-  } catch (error) {
-    console.error("Error fetching data:", error);
+  } catch (err) {
+    console.error("Error fetching data:", err);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }

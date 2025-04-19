@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
     const data = await result.json();
     await sql`
       INSERT INTO interview (
-        role, amount, techstack, type, questions, createdAt
+        role, amount, techstack, type, questions,level, createdAt
       ) VALUES
         (
           ${role},
@@ -46,6 +46,7 @@ export async function POST(req: NextRequest) {
           ${techstack},
           ${type},
           ${data.choices[0].message.content},
+          'senior',
           ${new Date()}
         )`;
 
@@ -58,13 +59,19 @@ export async function POST(req: NextRequest) {
     });
   }
 }
-
-export async function GET(req: NextRequest) {
-  const data = await sql`select * from interview`;
-  console.log(req);
-
-  return NextResponse.json(data);
+export async function GET() {
+  try {
+    const data = await sql.unsafe(`SELECT * FROM interview`);
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
 }
+
 // export async function POST(req: Request) {
 //   const { type, amount, role, techstack } = await req.json();
 //   const { text: questins } = await generateText({

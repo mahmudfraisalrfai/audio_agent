@@ -14,7 +14,7 @@ export default function InterviewCard({
   useEffect(() => {
     setFormattedDate(interview.createdat.toUTCString());
     setParseQuestions(JSON.parse(interview.questions));
-  }, [interview.createdat]);
+  }, [interview.createdat, interview.questions]);
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

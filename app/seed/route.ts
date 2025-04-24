@@ -31,7 +31,7 @@ async function seedInterview() {
     await sql`ALTER TABLE interview DROP CONSTRAINT interview_userid_key`;
     await sql`ALTER TABLE interview DROP CONSTRAINT interview_role_key`;
   } catch (error) {
-    console.warn("Constraint not found, skipping DROP CONSTRAINT.");
+    console.warn("Constraint not found, skipping DROP CONSTRAINT." + error);
   }
 }
 

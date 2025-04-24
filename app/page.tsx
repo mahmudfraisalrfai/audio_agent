@@ -1,18 +1,13 @@
 import AudioAgent from "@/app/components/agent_audio";
-export default function Chat() {
-  // const formatResponse = (response: string) => {
-  //   // إزالة العلامات غير الضرورية
-  //   const cleanText = response.replace(/[\{\}\[\]"!]/g, "").trim();
-  //   // تقسيم النص إلى فقرات منفصلة بناءً على الفقرات
-  //   const paragraphs = cleanText
-  //     .split("\n")
-  //     .map((p, index) => <p key={index}>{p}</p>);
-  //   return paragraphs;
-  // };
+import { getUserById } from "./lib/actions/ations";
+import InterviewCard from "./components/card";
+export default async function Chat() {
+  const data = await getUserById();
 
   return (
     <>
       <AudioAgent />
+      <InterviewCard interview={data} />
     </>
   );
 }

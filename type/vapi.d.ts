@@ -43,7 +43,16 @@ interface FunctionCallResultMessage extends BaseMessage {
     [a: string]: unknown;
   };
 }
-
+type information = {
+  amount: string;
+  level: string;
+  techstack: string;
+  userid: string;
+  questions: string; // مهم: type as array
+  role: string;
+  createdat: Date;
+  type: string;
+};
 type Message =
   | TranscriptMessage
   | FunctionCallMessage

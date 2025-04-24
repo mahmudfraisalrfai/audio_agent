@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
  the focuce between behavioural and technical questions should lean towards :${type}.
  the amount of questions ${amount}.
  please return only the questions , without any additional text .
- the questions are going to be in ARBIC and  read by a voice assistant so do not use "/" or "*" or any special characters wich might break the voice assistant
+ the questions are going to be read by a voice assistant so do not use "/" or "*" or any special characters wich might break the voice assistant
  return the questins formatted like this :["Question 1","Question 2","Question 3"]
 
  thank you ! <3`,

@@ -71,7 +71,7 @@ export async function GET() {
     );
   }
 }
-
+// { "type":"mixed", "amount":"8", "role":"frontend", "techstack":"react js" }
 // export async function POST(req: Request) {
 //   const { type, amount, role, techstack } = await req.json();
 //   const { text: questins } = await generateText({

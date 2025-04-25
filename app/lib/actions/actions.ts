@@ -1,6 +1,5 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import postgres from "postgres";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
@@ -12,7 +11,6 @@ export async function getUserById(): Promise<information> {
 
   const item = data[0];
 
-  revalidatePath("/");
   return {
     ...item,
   };

@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import postgres from "postgres";
 
@@ -49,7 +50,7 @@ export async function POST(req: NextRequest) {
           'senior',
           ${new Date()}
         )`;
-
+    revalidatePath("/");
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (err) {
     console.error("Error in API Route:", err);

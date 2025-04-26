@@ -48,7 +48,7 @@ type information = {
   level: string;
   techstack: string;
   userid: string;
-  questions: string; // مهم: type as array
+  questions: string;
   role: string;
   createdat: Date;
   type: string;

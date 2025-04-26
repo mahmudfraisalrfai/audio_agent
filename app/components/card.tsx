@@ -3,11 +3,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
-export default function InterviewCard({
-  interview,
-}: {
-  interview: information;
-}) {
+export default function Card({ interview }: { interview: information }) {
   const [formattedDate, setFormattedDate] = useState<string>("");
 
   const [parsedQuestions, setParseQuestions] = useState<string[]>();

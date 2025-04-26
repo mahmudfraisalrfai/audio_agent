@@ -1,16 +1,13 @@
 import AudioAgent from "@/app/components/agent_audio";
-import { getUserById } from "./lib/actions/actions";
-import InterviewCard from "./components/card";
+import InterviewCard from "./components/interviewcard";
 import { Suspense } from "react";
 import InterviewCardSkeleton from "./components/skeletoneInterview";
-export default async function Chat() {
-  const data = await getUserById();
-
+export default function Chat() {
   return (
     <>
       <AudioAgent />
       <Suspense fallback={<InterviewCardSkeleton />}>
-        <InterviewCard interview={data} />
+        <InterviewCard />
       </Suspense>
     </>
   );

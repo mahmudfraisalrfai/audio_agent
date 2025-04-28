@@ -1,6 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import postgres from "postgres";
+import { redirect } from "next/navigation";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
 export async function POST(req: NextRequest) {
@@ -51,7 +52,7 @@ export async function POST(req: NextRequest) {
           ${new Date()}
         )`;
     revalidatePath("/");
-    return NextResponse.json({ success: true }, { status: 200 });
+    redirect("/");
   } catch (err) {
     console.error("Error in API Route:", err);
     return new Response(JSON.stringify({ error: "Internal Server Error" }), {
